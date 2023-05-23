@@ -17,6 +17,7 @@ ADDITIONAL INSTALLATIONS NEEDED:
 	- pandas (to read excel file)
 	- numpy
 	- fpdf
+	- openpyxl
 
 
 INPUT FILES:
