@@ -18,6 +18,7 @@ ADDITIONAL INSTALLATIONS NEEDED:
 	- numpy
 	- fpdf
 	- openpyxl
+	- matplotlib
 
 
 INPUT FILES:
