@@ -32,3 +32,5 @@ OUTPUT FILES:
 - STEP file -> Right click "step_writer" part -> click "write"
 - Design report PDF -> Evaluate "output_pdf" attribute
 - All output files will be saved in "Output" folder
+
+CG ANALYSIS: Evaluate "cg_analysis" attribute. Figure will appear in Sciview.
