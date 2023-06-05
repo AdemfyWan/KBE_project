@@ -1,6 +1,6 @@
 from parapy.core import *
 from parapy.geom import *
-from math import radians, tan, pi, sin, atan
+from math import radians, tan, pi, sin, atan, cos
 from liftingsurface import LiftingSurface
 from ref_frame import Frame
 from winglet import Winglet
@@ -22,6 +22,10 @@ class WingAssembly(GeomBase):
     twist = Input(-2)
     fu_width = Input(0.3340)
     winglet_thickness = Input(0.005, validator=Range(0.002, 0.01))
+    elevon_chord_factor = Input(0.3)
+    elevon_span_factor = Input(0.40)
+    elevon_spanwise_pos= Input(0.1)
+
 
     @Part
     def main_wing(self):
@@ -47,15 +51,23 @@ class WingAssembly(GeomBase):
 
     @Attribute
     def hinge_radius(self):
-        return 0.05 * self.w_c_tip
+        return 0.1 * self.w_c_tip * (self.t_factor_root+self.t_factor_tip)/4
 
     @Attribute
     def elevon_span(self):
-        return 0.48 * self.w_semi_span
+        return self.elevon_span_factor * self.w_semi_span
 
     @Attribute
     def elevon_chord(self):
-        return 0.3 * self.w_c_tip
+        return self.elevon_chord_factor * self.w_c_tip
+
+    @Attribute
+    def elevon_position2(self):
+        return rotate(translate(self.position,
+                                'x', self.w_c_root - tan(self.sweep_te)*self.fu_width/2,
+                                #'y', self.fu_width / 2 + self.w_semi_span / 2,
+                                'z', -0.5 * (self.w_c_root + self.w_c_tip) * sin(radians(self.twist / 2))),
+                      'z', -self.sweep_te)
 
     @Attribute
     def elevon_position3(self):
@@ -67,22 +79,33 @@ class WingAssembly(GeomBase):
 
     @Attribute
     def elevon_position4(self):
-        return rotate(self.elevon_position3,
-                      'x', -radians(self.twist / 4))
+        return rotate(translate(self.position,
+                                      'x', 0.6*self.w_c_root,
+                                      'y', (0.5 * self.fu_width + self.w_semi_span)*(1-self.elevon_spanwise_pos),
+                                      'z', -0.6 * self.w_c_tip),
+                    'z',3/2*pi)
 
     @Part
     def hinge_frame(self):
+        return Frame(pos=self.elevon_position2,
+                     hidden=True
+                     )
+
+    @Part
+    def hinge_frame2(self):
         return Frame(pos=self.elevon_position4,
-                     hidden=True)
+                     hidden=True
+            )
 
     @Part
     def hinge_cylinder(self):
         return Cylinder(
             radius=self.hinge_radius,
-            height=self.elevon_span,
+            height= 1.2*self.w_semi_span,
             angle=pi * 2,
-            position=rotate(translate(self.elevon_position4,
-                                      'x', -self.elevon_chord),
+            position=rotate(translate(self.elevon_position2,
+                                      'x', -self.elevon_chord,
+                                      'y', self.fu_width/2/cos(self.sweep_te)),
                             'x', radians(270)),
             hidden=True
         )
@@ -90,10 +113,11 @@ class WingAssembly(GeomBase):
     @Part
     def elevon_box1(self):
         return Box(width=self.w_c_tip,
-                   length=self.elevon_span,
+                   length=1.2*self.w_semi_span,
                    height=self.hinge_radius * 2,
-                   position=translate(self.elevon_position4,
+                   position=translate(self.elevon_position2,
                                       'x', -self.elevon_chord,
+                                      'y', self.fu_width/2/cos(self.sweep_te),
                                       'z', -self.hinge_radius),
                    hidden=True
                    )
@@ -108,7 +132,7 @@ class WingAssembly(GeomBase):
     @Part
     def elevon_box2(self):
         return Box(width=0.5 * self.w_semi_span,
-                   length=0.35 * self.w_semi_span,  # spanwise elevon length
+                   length=0.3 * self.w_semi_span,  # spanwise elevon length
                    height=0.2 * self.w_semi_span,
                    position=translate(self.position,
                                       'x', self.w_c_root,
@@ -118,9 +142,18 @@ class WingAssembly(GeomBase):
                    )
 
     @Part
+    def elevon_box3(self):
+        return Box(width=self.elevon_span_factor * self.w_semi_span,
+                   length=0.8 * self.w_semi_span,  # spanwise elevon length
+                   height=0.2 * self.w_semi_span,
+                   position=self.elevon_position4,
+                   hidden=True
+                   )
+
+    @Part
     def elevon_box_cylinder2(self):
         return CommonSolid(shape_in=self.elevon_box_cylinder1,
-                           tool=self.elevon_box2,
+                           tool=self.elevon_box3,
                            hidden=True
                            )
 
