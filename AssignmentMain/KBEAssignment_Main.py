@@ -8,13 +8,13 @@ from typing import Dict
 from parapy.exchange import STEPWriter
 from fpdf import FPDF
 from datetime import datetime
-from AssignmentMain import MATLAB_Q3D_ENGINE
-import matlab.engine
+#from AssignmentMain import MATLAB_Q3D_ENGINE
+#import matlab.engine
 import pandas as pd
 import numpy as np
 import time
 import os
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from bodyassembly import BodyAssembly
 from motorassembly import MotorAssembly
 from wingassembly import WingAssembly
@@ -250,14 +250,15 @@ class Aircraft(GeomBase):
     airfoil_tip = Input("hs522")
     t_factor_root = Input(2, validator=Range(1, 3))  #: to reduce/increase airfoil thickness
     t_factor_tip = Input(1, validator=Range(1, 2))
-
     #  propulsion system
     power_weight_ratio = Input(220, validator=Range(176, 264))
-
     #  propeller dimensions
     p_twist = Input(35)
     p_taper = Input(0.008/0.018)
-
+    #  elevon chord, span, position
+    e_chord_f = Input(0.3,validator=Range(0.2,0.5))
+    e_span_f = Input(0.40,validator=Range(0.3,0.8))
+    e_spanwise_pos = Input(0.1,validator=Range(0.03,0.2))
     #    wing_dihedral = Input(0, validator=Range(-5, 5))
     #    cruise_aoa = Input(1, validator=Range(-7, 7))
 
@@ -330,7 +331,10 @@ class Aircraft(GeomBase):
             w_semi_span=self.w_semi_span,
             sweep_le=self.sweep_le,
             twist=self.twist,
-            fu_width=self.fu_width
+            fu_width=self.fu_width,
+            elevon_chord_factor = self.e_chord_f,
+            elevon_span_factor = self.e_span_f,
+            elevon_spanwise_pos = self.e_spanwise_pos
         )
 
 # MOTOR & PROPELLER ====================================================================================================
