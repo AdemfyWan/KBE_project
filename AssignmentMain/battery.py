@@ -12,10 +12,11 @@ class Battery(Box):
     air_density = Input(1.1911)  # [kg/m^3]
     k1 = 0.38  # width/length ratio
     k2 = 0.31  # height/length ratio
-
+    prop_eff = Input(0.70)  #
+    motor_eff = Input(0.70)  #
     @Attribute
     def power(self):  # power = drag force * v_cruise
-        return 0.5*self.air_density * self.v_cruise**3 * self.ref_area * self.cd
+        return 0.5*self.air_density * self.v_cruise**3 * self.ref_area * self.cd / self.prop_eff / self.motor_eff
 
     @Attribute
     def battery_capacity(self):
