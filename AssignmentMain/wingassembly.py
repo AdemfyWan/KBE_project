@@ -13,8 +13,8 @@ DIR = os.path.dirname(__file__)
 class WingAssembly(GeomBase):
     w_c_root = Input(0.4243)
     w_c_tip = Input(0.4243/2)
-    airfoil_root = Input('hs522')
-    airfoil_tip = Input('hs522')
+    airfoil_root = Input('whitcomb')
+    airfoil_tip = Input('whitcomb')
     t_factor_root = Input(2)
     t_factor_tip = Input(1)
     w_semi_span = Input(1.0259)
@@ -22,9 +22,9 @@ class WingAssembly(GeomBase):
     twist = Input(-2)
     fu_width = Input(0.3340)
     winglet_thickness = Input(0.005, validator=Range(0.002, 0.01))
-    elevon_chord_factor = Input(0.3, validator=Range(0.2, 0.4))
-    elevon_span_factor = Input(0.40, validator=Range(0.3, 0.7))
-    elevon_spanwise_pos = Input(0.1, validator=Range(0.05, 0.2))
+    elevon_chord_factor = Input(0.4)
+    elevon_span_factor = Input(0.40)
+    elevon_spanwise_pos= Input(0.1)
 
 
     @Part
@@ -51,9 +51,9 @@ class WingAssembly(GeomBase):
 
     @Attribute
     def hinge_radius(self):
-        return 0.1 * self.w_c_tip * (self.t_factor_root+self.t_factor_tip)/4
+        return 0.8 * self.w_c_tip * (self.t_factor_root+self.t_factor_tip)/4
 
-    @Attribute
+
     def elevon_span(self):
         return self.elevon_span_factor * self.w_semi_span
 
@@ -88,7 +88,7 @@ class WingAssembly(GeomBase):
     @Part
     def hinge_frame(self):
         return Frame(pos=self.elevon_position2,
-                     hidden=True
+                     #hidden=True
                      )
 
     @Part
@@ -104,7 +104,7 @@ class WingAssembly(GeomBase):
             height= 1.2*self.w_semi_span,
             angle=pi * 2,
             position=rotate(translate(self.elevon_position2,
-                                      'x', -self.elevon_chord,
+                                      'x', -self.elevon_chord+self.hinge_radius,
                                       'y', self.fu_width/2/cos(self.sweep_te)),
                             'x', radians(270)),
             hidden=True
@@ -116,7 +116,7 @@ class WingAssembly(GeomBase):
                    length=1.2*self.w_semi_span,
                    height=self.hinge_radius * 2,
                    position=translate(self.elevon_position2,
-                                      'x', -self.elevon_chord,
+                                      'x', -self.elevon_chord+self.hinge_radius,
                                       'y', self.fu_width/2/cos(self.sweep_te),
                                       'z', -self.hinge_radius),
                    hidden=True
