@@ -27,6 +27,7 @@ INPUT FILES:
 	- Must be placed in "Airfoils" folder
 	- Must be a Selig format .dat file (LE -> upper surface -> 0,0 -> lower surface -> TE)
 	- Must have closed TE
+	- Must not have any spaces before first column
 
 
 OUTPUT FILES:
