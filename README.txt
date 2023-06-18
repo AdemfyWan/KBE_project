@@ -6,7 +6,10 @@ DIRECTORY STRUCTURE:
   │   └── <py files> 
   └── Q3D
       └── <matlab files>
-
+      
+ 
+ FILE TO RUN: KBEAssignment_Main.py
+ 
 
 ADDITIONAL INSTALLATIONS NEEDED:
 - MATLAB R2021b (later versions not compatible with Python 3.7)
@@ -42,7 +45,5 @@ NOTES:
 	the battery capacity & volume will not be calculated, and the battery dimensions will simply be scaled proportionally to the airframe size.
 	When set as "True", all parameters will be calculated, which requires an input (Cd) from Q3D.
 	Setting as "False" will is useful when testing different geometry inputs to avoid triggering Q3D. 
-
-
 
 
