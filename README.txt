@@ -36,3 +36,13 @@ OUTPUT FILES:
 	- CG Analysis: Evaluate "cg_analysis" attribute
 	- Planform: Evaluate "planform_plot" attribute
 - All output files will be saved in "Output" folder
+
+NOTES:
+- 'evaluate_battery' input parameter (True/False) is used to toggle the battery calculation method. If set as "False",
+	the battery capacity & volume will not be calculated, and the battery dimensions will simply be scaled proportionally to the airframe size.
+	When set as "True", all parameters will be calculated, which requires an input (Cd) from Q3D.
+	Setting as "False" will is useful when testing different geometry inputs to avoid triggering Q3D. 
+
+
+
+
