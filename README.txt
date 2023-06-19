@@ -44,6 +44,6 @@ NOTES:
 - 'evaluate_battery' input parameter (True/False) is used to toggle the battery calculation method. If set as "False",
 	the battery capacity & volume will not be calculated, and the battery dimensions will simply be scaled proportionally to the airframe size.
 	When set as "True", all parameters will be calculated, which requires an input (Cd) from Q3D.
-	Setting as "False" will is useful when testing different geometry inputs to avoid triggering Q3D. 
+	Setting as "False" will be useful when testing different geometry inputs to avoid triggering Q3D. 
 
 
